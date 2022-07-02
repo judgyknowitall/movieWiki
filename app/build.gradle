@@ -59,4 +59,7 @@ dependencies {
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
+
+    // iTunes Search: https://mavenlibs.com/maven/dependency/be.ceau/itunes-search
+    implementation 'be.ceau:itunes-search:3.0'
 }
