@@ -1,4 +1,4 @@
-package com.example.moviewiki
+package com.example.moviewiki.model
 
 import androidx.compose.runtime.Immutable
 
@@ -6,17 +6,20 @@ import androidx.compose.runtime.Immutable
 sealed class MainScreenUiEvent {
     data class ShowMovieList(val movies: List<Movie>) : MainScreenUiEvent()
     data class OnMovieItemClicked(val movie: Movie) : MainScreenUiEvent()
-    data class ShowNoInternetError(val show: Boolean) : MainScreenUiEvent()
+    object ShowNoInternetError : MainScreenUiEvent()
 }
 
 @Immutable
 data class MainScreenState(
     val isLoading: Boolean,
     val movies: List<Movie>,
-    val noInternet: Boolean,
-    val isShowMovieDialog: Boolean
+    val noInternet: Boolean
 ) {
     companion object {
-
+        fun init() = MainScreenState(
+            isLoading = false,
+            movies = emptyList(),
+            noInternet = true
+        )
     }
 }

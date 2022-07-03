@@ -2,20 +2,16 @@ package com.example.moviewiki.ui
 
 import android.content.res.Configuration
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.moviewiki.Movie
+import com.example.moviewiki.model.Movie
 import com.example.moviewiki.R
 import com.example.moviewiki.ui.theme.MovieWikiTheme
 
@@ -91,12 +87,14 @@ fun DescriptionEntry(title: String, description: List<String>) {
 @Composable
 fun MovieDescriptionScreenPreview() {
     MovieWikiTheme {
-        MovieDescriptionScreen(Movie(
+        MovieDescriptionScreen(
+            Movie(
             title= "Spiderman",
             imageId = R.drawable.profile_picture,
             cast = listOf("Adam", "Tom", "Jerry"),
             crew = listOf("Marry", "Jane", "Joe"),
             description = "This is such a great movie. We've got Spiderman1, 2, and 3. And then there's the Amazing Spiderman, etc. "
-        ))
+        )
+        )
     }
 }
