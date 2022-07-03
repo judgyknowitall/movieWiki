@@ -1,6 +1,7 @@
 package com.example.moviewiki.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.moviewiki.BuildConfig
 import com.example.moviewiki.model.MainScreenState
 import com.example.moviewiki.model.MainScreenUiEvent
 import com.example.moviewiki.model.Movie
@@ -16,8 +17,12 @@ class MainViewModel : ViewModel() {
 
 
     // Functions
-    fun showNoInternetError() {
-        reducer.sendEvent(MainScreenUiEvent.ShowNoInternetError)
+    fun changeSearchBarText(newText: String) {
+        reducer.sendEvent(MainScreenUiEvent.OnSearchBarTextChanged(newText))
+    }
+
+    fun showInternetError(show: Boolean) {
+        reducer.sendEvent(MainScreenUiEvent.ShowInternetError(show))
     }
 
     fun selectMovie(movie: Movie) {
@@ -43,16 +48,23 @@ class MainViewModel : ViewModel() {
             reduce(_state.value, event)
         }
 
+        private fun setState(newState: MainScreenState) {
+            _state.tryEmit(newState)
+        }
+
         private fun reduce(oldState: MainScreenState, event: MainScreenUiEvent) {
             when (event) {
-                is MainScreenUiEvent.ShowMovieList -> {
-                    // TODO
+                is MainScreenUiEvent.OnSearchBarTextChanged -> {
+                    setState(oldState.copy(searchInput = event.newText))
                 }
-                is MainScreenUiEvent.ShowNoInternetError -> {
-                    // TODO
+                is MainScreenUiEvent.ShowMovieList -> {
+                    setState(oldState.copy(movies = event.movies))
+                }
+                is MainScreenUiEvent.ShowInternetError -> {
+                    setState(oldState.copy(noInternet = event.show))
                 }
                 is MainScreenUiEvent.OnMovieItemClicked -> {
-                    //TODO
+                    setState(oldState.copy(selectedMovie = event.movie))
                 }
             }
         }
