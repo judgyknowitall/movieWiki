@@ -1,12 +1,12 @@
 package com.example.moviewiki.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.moviewiki.BuildConfig
-import com.example.moviewiki.model.MainScreenState
-import com.example.moviewiki.model.MainScreenUiEvent
-import com.example.moviewiki.model.Movie
+import com.example.moviewiki.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
@@ -16,11 +16,9 @@ class MainViewModel : ViewModel() {
         get() = reducer.state
 
 
-    // Functions
-    fun changeSearchBarText(newText: String) {
-        reducer.sendEvent(MainScreenUiEvent.OnSearchBarTextChanged(newText))
-    }
 
+
+    // Functions
     fun showInternetError(show: Boolean) {
         reducer.sendEvent(MainScreenUiEvent.ShowInternetError(show))
     }
@@ -29,8 +27,37 @@ class MainViewModel : ViewModel() {
         reducer.sendEvent(MainScreenUiEvent.OnMovieItemClicked(movie))
     }
 
-    fun showMovies(movies: List<Movie>){
+    fun changeSearchBarText(newText: String) {
+        reducer.sendEvent(MainScreenUiEvent.OnSearchBarTextChanged(newText))
+        search(newText)
+    }
+
+    private fun showMovies(movies: List<Movie>){
         reducer.sendEvent(MainScreenUiEvent.ShowMovieList(movies))
+    }
+
+    // Coroutine
+    private fun search(text: String) {
+        viewModelScope.launch() {
+            showMovies(SampleData.moviesSample)
+
+            // TODO search movie
+        /*
+        Log.d("DEBUG", "$res")
+        if (res){
+        //LaunchedEffect(Unit) {
+        val response = Search("Nemo")
+            .setMedia(Media.MOVIE)
+            .setLimit(5)
+            .execute()
+
+        if (response.results != null){
+            Log.d("DEBUG", "Response: ${response.results[0].trackName}")
+        }
+        //}
+        }
+        */
+        }
     }
 
 

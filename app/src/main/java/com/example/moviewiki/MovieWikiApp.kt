@@ -32,13 +32,16 @@ fun MovieWikiApp() {
                     val viewModel = viewModel<MainViewModel>()
                     MainScreen(
                         viewModel = viewModel,
-                        onItemClicked = { movie -> navigateToMovie(navController, movie) }
+                        onItemClicked = { movie ->
+                            Log.d("MovieWikiApp", "Navigating to movie! ${movie.title}")
+                            navigateToMovie(navController, movie)
+                        }
                     )
                 }
 
                 // Movie Description Screen
                 composable(
-                    route = NavRoute.MovieDescriptionScreen,
+                    route = "${NavRoute.MovieDescriptionScreen}/{movie}",
                     arguments = listOf(
                         navArgument("movie") {
                             type = MovieType()

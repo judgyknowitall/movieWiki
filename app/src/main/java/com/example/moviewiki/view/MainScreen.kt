@@ -108,21 +108,6 @@ fun MovieList(movies: List<Movie>, onItemClicked: (Movie) -> Unit) {
     }
 }
 
-/*
-Log.d("DEBUG", "$res")
-if (res){
-    //LaunchedEffect(Unit) {
-    val response = Search("Nemo")
-        .setMedia(Media.MOVIE)
-        .setLimit(5)
-        .execute()
-
-    if (response.results != null){
-        Log.d("DEBUG", "Response: ${response.results[0].trackName}")
-    }
-    //}
-}
- */
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
