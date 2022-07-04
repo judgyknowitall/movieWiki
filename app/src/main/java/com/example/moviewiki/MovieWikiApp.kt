@@ -32,10 +32,7 @@ fun MovieWikiApp() {
                     val viewModel = viewModel<MainViewModel>()
                     MainScreen(
                         viewModel = viewModel,
-                        onItemClicked = { movie ->
-                            Log.d("MovieWikiApp", "Navigating to movie! ${movie.title}")
-                            navigateToMovie(navController, movie)
-                        }
+                        onItemClicked = { movie -> navigateToMovie(navController, movie) }
                     )
                 }
 

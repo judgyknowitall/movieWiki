@@ -1,9 +1,12 @@
 package com.example.moviewiki.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.moviewiki.BuildConfig
+import be.ceau.itunessearch.Search
+import be.ceau.itunessearch.enums.Media
 import com.example.moviewiki.model.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -38,25 +41,36 @@ class MainViewModel : ViewModel() {
 
     // Coroutine
     private fun search(text: String) {
-        viewModelScope.launch() {
-            showMovies(SampleData.moviesSample)
+        if (text.isEmpty()) return
 
-            // TODO search movie
-        /*
-        Log.d("DEBUG", "$res")
-        if (res){
-        //LaunchedEffect(Unit) {
-        val response = Search("Nemo")
-            .setMedia(Media.MOVIE)
-            .setLimit(5)
-            .execute()
+        viewModelScope.launch(Dispatchers.Default) {
 
-        if (response.results != null){
-            Log.d("DEBUG", "Response: ${response.results[0].trackName}")
-        }
-        //}
-        }
-        */
+            // TODO show loading?
+
+            val response = Search(text)
+                .setMedia(Media.MOVIE)
+                .setLimit(20)
+                .execute()
+
+            if (response.results != null){
+                val movies: MutableList<Movie> = mutableListOf()
+                for (result in response.results) {
+                    movies.add(Movie(
+                        title = result.trackName,
+                        description = result.longDescription,
+                        cast = listOf(result.artistName),
+                        crew = listOf(result.artistName),
+                        imageURL = result.largestArtworkUrl
+                    ))
+                }
+
+                if (response.resultCount == 0){
+                    Log.d("MainViewModel.search", "Results are empty!")
+                }
+                else {
+                    showMovies(movies)
+                }
+            }
         }
     }
 

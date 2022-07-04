@@ -2,6 +2,7 @@ package com.example.moviewiki.ui
 
 import android.content.res.Configuration
 import android.util.Log
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusState
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -98,10 +100,12 @@ fun SearchBar (
 fun MovieList(movies: List<Movie>, onItemClicked: (Movie) -> Unit) {
     LazyColumn {
         items(movies) { movie ->
-            Button(onClick = {
-                Log.d("DEBUG", "Button works!")
-                onItemClicked(movie) //TODO
-            }) {
+            Button(
+                onClick = { onItemClicked(movie) },
+                modifier = Modifier
+                    //.border(0.dp, MaterialTheme.colors.primary, RectangleShape)
+                //TODO remove outline??
+            ){
                 MovieItem(movie = movie)
             }
         }
@@ -137,10 +141,8 @@ fun TopBarPreview() {
     SearchBar(
         value,
         onValueChanged = { value = it },
-        //onDoneTyping = { view.clearFocus() },
         onClearClick = {
             value = ""
-            //view.clearFocus()
         }
     )
 }

@@ -11,7 +11,8 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class Movie (
     val title: String = "Title",
-    val imageId: Int = R.drawable.profile_picture,
+    val imageId: Int = R.drawable.movie_icon,
+    val imageURL: String = "",
     val crew: List<String> = emptyList(),
     val cast: List<String> = emptyList(),
     val description: String = "Description"
@@ -38,7 +39,7 @@ class MovieType : NavType<Movie>(isNullableAllowed = false) {
 object SampleMovie {
     val movie = Movie (
         title= "Spiderman",
-        imageId = R.drawable.profile_picture,
+        imageURL = "https://m.media-amazon.com/images/M/MV5BZWMyYzFjYTYtNTRjYi00OGExLWE2YzgtOGRmYjAxZTU3NzBiXkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_.jpg",
         cast = listOf("Adam", "Tom", "Jerry"),
         crew = listOf("Marry", "Jane", "Joe"),
         description = "This is such a great movie. We've got Spiderman1, 2, and 3. And then there's the Amazing Spiderman, etc. "

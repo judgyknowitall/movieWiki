@@ -65,4 +65,7 @@ dependencies {
 
     // iTunes Search: https://mavenlibs.com/maven/dependency/be.ceau/itunes-search
     implementation 'be.ceau:itunes-search:3.0'
+
+    // Coil: https://coil-kt.github.io/coil/compose/
+    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
 }
