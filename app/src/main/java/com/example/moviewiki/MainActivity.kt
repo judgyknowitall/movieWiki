@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.moviewiki.ui.MainScreenPreview
+import com.example.moviewiki.view.MainScreenPreview
 
 
 class MainActivity : ComponentActivity() {

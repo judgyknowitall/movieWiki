@@ -1,8 +1,7 @@
-package com.example.moviewiki.ui
+package com.example.moviewiki.view
 
 import android.content.res.Configuration
 import android.util.Log
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,9 +15,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusState
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,40 +28,49 @@ import com.example.moviewiki.viewmodel.MainViewModel
 @Composable
 fun MainScreen(viewModel: MainViewModel, onItemClicked: (Movie) -> Unit) {
 
-    // Observing state
-    val state by viewModel.state.collectAsState()
-    val view = LocalView.current
-    
-    Column (horizontalAlignment = Alignment.CenterHorizontally) {
-        
-        SearchBar (
-            text = state.searchInput,
-            onValueChanged = { newText -> viewModel.changeSearchBarText(newText) },
-            onDoneTyping = { view.clearFocus() },
-            onClearClick = {
-                viewModel.changeSearchBarText("")
-                view.clearFocus()
+    Scaffold (
+        topBar = {
+            TopAppBar {
+                Text("Search for a Movie")
             }
-        )
-        
-        when {
-            state.isLoading -> {
-                //TODO: show loading bar
-                Text("Loading....")
-            }
-            state.movies.isNotEmpty() -> {
-                //TODO show movie list
-                MovieList(
-                    movies = state.movies,
-                    onItemClicked = onItemClicked
-                )
-            }
-            state.movies.isEmpty() -> {
-                //TODO show last searched list, or tell user to start searching / no item found
-                Text("No Items to show atm")
+        })
+    {
+        // Observing state
+        val state by viewModel.state.collectAsState()
+        val view = LocalView.current
+
+        Column (horizontalAlignment = Alignment.CenterHorizontally) {
+
+            SearchBar (
+                text = state.searchInput,
+                onValueChanged = { newText -> viewModel.changeSearchBarText(newText) },
+                onDoneTyping = { view.clearFocus() },
+                onClearClick = {
+                    viewModel.changeSearchBarText("")
+                    view.clearFocus()
+                }
+            )
+
+            when {
+                state.isLoading -> {
+                    //TODO: show loading bar
+                    Text("Loading....")
+                }
+                state.movies.isNotEmpty() -> {
+                    //TODO show movie list
+                    MovieList(
+                        movies = state.movies,
+                        onItemClicked = onItemClicked
+                    )
+                }
+                state.movies.isEmpty() -> {
+                    //TODO show last searched list, or tell user to start searching / no item found
+                    Text("No Items to show atm")
+                }
             }
         }
     }
+
 }
 
 

@@ -14,8 +14,8 @@ import com.example.moviewiki.model.Movie
 import com.example.moviewiki.model.MovieType
 import com.example.moviewiki.model.NavRoute
 import com.example.moviewiki.model.SampleMovie
-import com.example.moviewiki.ui.MainScreen
-import com.example.moviewiki.ui.MovieDescriptionScreen
+import com.example.moviewiki.view.MainScreen
+import com.example.moviewiki.view.MovieDescriptionScreen
 import com.example.moviewiki.ui.theme.MovieWikiTheme
 import com.example.moviewiki.viewmodel.MainViewModel
 import com.google.gson.Gson
@@ -46,11 +46,17 @@ fun MovieWikiApp() {
                 ){ backStackEntry ->
                     val movie = backStackEntry.arguments?.getParcelable<Movie>("movie") // extract argument
                     if (movie != null) {
-                        MovieDescriptionScreen(movie = movie)
+                        MovieDescriptionScreen(
+                            movie = movie,
+                            onCloseClicked = { navController.navigate(NavRoute.MainScreen) }
+                        )
                     }
                     else {
                         Log.e("MovieWikiApp", "Movie not received properly from previous nav")
-                        MovieDescriptionScreen(movie = SampleMovie.movie)
+                        MovieDescriptionScreen(
+                            movie = SampleMovie.movie,
+                            onCloseClicked = { navController.navigate(NavRoute.MainScreen) }
+                        )
                     }
                 }
             }

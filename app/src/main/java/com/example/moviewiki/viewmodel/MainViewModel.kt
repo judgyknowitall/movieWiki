@@ -59,7 +59,7 @@ class MainViewModel : ViewModel() {
                         title = result.trackName,
                         description = result.longDescription,
                         cast = listOf(result.artistName),
-                        crew = listOf(result.artistName),
+                        crew = listOf(result.collectionName),
                         imageURL = result.largestArtworkUrl
                     ))
                 }
