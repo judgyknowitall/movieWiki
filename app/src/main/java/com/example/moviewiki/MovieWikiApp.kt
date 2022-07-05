@@ -1,9 +1,12 @@
 package com.example.moviewiki
 
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.util.Log
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -29,7 +32,7 @@ fun MovieWikiApp() {
 
                 // Main Screen (Search and List View)
                 composable(NavRoute.MainScreen) {
-                    val viewModel = viewModel<MainViewModel>()
+                    val viewModel = viewModel<MainViewModel>() //TODO here
                     MainScreen(
                         viewModel = viewModel,
                         onItemClicked = { movie -> navigateToMovie(navController, movie) }
