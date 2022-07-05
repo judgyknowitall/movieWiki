@@ -7,6 +7,7 @@ import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
@@ -75,7 +76,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun changeSearchBarText(newText: String) {
         reducer.sendEvent(MainScreenUiEvent.OnSearchBarTextChanged(newText))
-        search(newText)
+        if (state.value.connected) search(newText)
     }
 
     private fun showMovies(movies: List<Movie>){
@@ -101,8 +102,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     movies.add(Movie(
                         title = result.trackName,
                         description = result.longDescription,
-                        cast = listOf(result.artistName),
-                        crew = listOf(result.collectionName),
+                        crew = listOf(result.artistName),
                         imageURL = result.largestArtworkUrl
                     ))
                 }

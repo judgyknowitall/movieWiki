@@ -4,7 +4,9 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.util.Log
 import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -22,10 +24,13 @@ import com.example.moviewiki.view.MovieDescriptionScreen
 import com.example.moviewiki.ui.theme.MovieWikiTheme
 import com.example.moviewiki.viewmodel.MainViewModel
 import com.google.gson.Gson
+import kotlinx.coroutines.launch
 
 @Composable
 fun MovieWikiApp() {
+
     val navController = rememberNavController()
+
     MovieWikiTheme {
         Scaffold {
             NavHost(navController = navController, startDestination = NavRoute.MainScreen) {
@@ -51,14 +56,14 @@ fun MovieWikiApp() {
                     if (movie != null) {
                         MovieDescriptionScreen(
                             movie = movie,
-                            onCloseClicked = { navController.navigate(NavRoute.MainScreen) }
+                            onCloseClicked = { navController.popBackStack() }
                         )
                     }
                     else {
                         Log.e("MovieWikiApp", "Movie not received properly from previous nav")
                         MovieDescriptionScreen(
                             movie = SampleMovie.movie,
-                            onCloseClicked = { navController.navigate(NavRoute.MainScreen) }
+                            onCloseClicked = { navController.popBackStack() }
                         )
                     }
                 }

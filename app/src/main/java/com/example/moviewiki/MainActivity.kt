@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.moviewiki.view.MainScreenPreview
+import com.example.moviewiki.view.MovieListPreview
 
 
 class MainActivity : ComponentActivity() {
@@ -21,5 +21,5 @@ class MainActivity : ComponentActivity() {
 @Preview
 @Composable
 fun DefaultPreview() {
-    MainScreenPreview()
+    MovieListPreview()
 }

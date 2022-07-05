@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,13 +26,11 @@ import com.example.moviewiki.ui.theme.MovieWikiTheme
 fun MovieDescriptionScreen(movie: Movie, onCloseClicked: () -> Unit){
 
     Scaffold (
-        floatingActionButton = {
-            FloatingActionButton(onClick = onCloseClicked) {
-                Icon(imageVector = Icons.Filled.Clear, contentDescription = "Clear", tint = MaterialTheme.colors.background)
-            }
-        },
         topBar = {
             TopAppBar {
+                IconButton(onClick = onCloseClicked) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
+                }
                 Text(movie.title, modifier = Modifier.padding(start=10.dp))
             }
         })
@@ -74,8 +73,7 @@ fun MovieDescriptionScreen(movie: Movie, onCloseClicked: () -> Unit){
             Spacer(modifier = Modifier.height(20.dp))
 
             // Crew and Cast
-            DescriptionEntry(title = "Cast", description = movie.cast)
-            DescriptionEntry(title = "Crew", description = movie.crew)
+            DescriptionEntry(title = "Cast&Crew", description = movie.crew)
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -91,14 +89,16 @@ fun DescriptionEntry(title: String, description: List<String>) {
     Row (modifier = Modifier.padding(vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(
             title.plus(":"),
-            style= MaterialTheme.typography.subtitle2
+            style = MaterialTheme.typography.subtitle2
         )
 
         Spacer(modifier = Modifier.width(20.dp))
 
-        Text(
-            description.joinToString(separator = ", ") { it }
-        )
+        if (description.isNotEmpty()) {
+            Text(
+                description.joinToString(separator = ", ") { it }
+            )
+        }
     }
 }
 

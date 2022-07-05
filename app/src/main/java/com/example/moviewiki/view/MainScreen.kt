@@ -20,20 +20,48 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.moviewiki.model.Movie
+import com.example.moviewiki.model.SampleData
 import com.example.moviewiki.model.SampleMovie.movie
 import com.example.moviewiki.ui.theme.MovieWikiTheme
 import com.example.moviewiki.viewmodel.MainViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun MainScreen(viewModel: MainViewModel, onItemClicked: (Movie) -> Unit) {
+fun MainScreen(
+    viewModel: MainViewModel,
+    onItemClicked: (Movie) -> Unit
+) {
+
+    val coroutineExceptionHandler = CoroutineExceptionHandler{_, throwable ->
+        throwable.printStackTrace()
+    }
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+    val noInternetSnackBar = {
+        Log.d("MainScreen", "No Internet snackbar!")
+        scope.launch(Dispatchers.IO + coroutineExceptionHandler) {
+            scaffoldState.snackbarHostState
+                .showSnackbar(message="No Internet...")
+        }
+    }
 
     Scaffold (
+        scaffoldState = scaffoldState,
         topBar = {
             TopAppBar {
                 Text("Search for a Movie")
             }
-        })
+        },
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                text = { Text("Show snackbar") },
+                onClick = {noInternetSnackBar()}
+            )
+        }
+    )
     {
         // Observing state
         val state by viewModel.state.collectAsState()
@@ -43,7 +71,10 @@ fun MainScreen(viewModel: MainViewModel, onItemClicked: (Movie) -> Unit) {
 
             SearchBar (
                 text = state.searchInput,
-                onValueChanged = { newText -> viewModel.changeSearchBarText(newText) },
+                onValueChanged = { newText ->
+                    viewModel.changeSearchBarText(newText)
+                    if (!state.connected) noInternetSnackBar()
+                                 },
                 onDoneTyping = { view.clearFocus() },
                 onClearClick = {
                     viewModel.changeSearchBarText("")
@@ -57,15 +88,17 @@ fun MainScreen(viewModel: MainViewModel, onItemClicked: (Movie) -> Unit) {
                     Text("Loading....")
                 }
                 state.movies.isNotEmpty() -> {
-                    //TODO show movie list
                     MovieList(
                         movies = state.movies,
-                        onItemClicked = onItemClicked
+                        onItemClicked = { movie ->
+                            if (state.connected) onItemClicked(movie)
+                            else noInternetSnackBar()
+                        }
                     )
                 }
                 state.movies.isEmpty() -> {
                     //TODO show last searched list, or tell user to start searching / no item found
-                    Text("No Items to show atm")
+                    Text("No Items to show atm", modifier = Modifier.padding(vertical=10.dp))
                 }
             }
         }
@@ -131,9 +164,9 @@ fun MovieList(movies: List<Movie>, onItemClicked: (Movie) -> Unit) {
     name = "Dark Mode"
 )
 @Composable
-fun MainScreenPreview() {
+fun MovieListPreview() {
     MovieWikiTheme {
-        MovieList(listOf(Movie("Spiderman"))) {
+        MovieList(SampleData.moviesSample) {
             Log.d("MovieListPreview", "${movie.title} was selected!")
         }
     }
