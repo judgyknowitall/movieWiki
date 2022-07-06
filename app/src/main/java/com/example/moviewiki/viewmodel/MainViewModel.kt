@@ -85,7 +85,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
         // Get old movies
         backgroundThreadRealm.executeTransaction {
-            Log.e("REALM", "Retrieving saved movies")
+            Log.d("REALM", "Retrieving saved movies...")
             if (realmMovieResults != null) {
                 val movies = ArrayList<Movie>(realmMovieResults.size)
                 for (result in realmMovieResults) {

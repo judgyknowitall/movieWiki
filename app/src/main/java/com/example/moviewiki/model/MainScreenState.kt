@@ -19,7 +19,7 @@ data class MainScreenState(
         fun init() = MainScreenState(
             isLoading = false,
             movies = emptyList(),
-            connected = true,
+            connected = false,
             searchInput = ""
         )
     }
