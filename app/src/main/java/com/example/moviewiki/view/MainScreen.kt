@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -30,6 +31,7 @@ import com.example.moviewiki.model.Movie
 import com.example.moviewiki.model.SampleData
 import com.example.moviewiki.model.SampleMovie.movie
 import com.example.moviewiki.ui.theme.MovieWikiTheme
+import com.example.moviewiki.ui.theme.Typography
 import com.example.moviewiki.viewmodel.MainViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
@@ -62,7 +64,7 @@ fun MainScreen(
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar {
-                Text("Movie Wiki", modifier = Modifier.padding(horizontal = 10.dp))
+                Text("Movie Wiki", fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 10.dp))
                 Spacer(modifier = Modifier.weight(1.0f))
                 IconButton(onClick = { viewModel.updateRealmDB() }, modifier = Modifier.semantics { testTag = "SaveButton" }) {
                     Icon(
@@ -108,10 +110,7 @@ fun MainScreen(
                         }
                     )
                 }
-                state.movies.isEmpty() -> {
-                    //TODO show last searched list, or tell user to start searching / no item found
-                    Text("No Items to show atm", modifier = Modifier.padding(vertical=10.dp))
-                }
+                state.movies.isEmpty() -> { NoMovies() }
             }
         }
     }
@@ -165,6 +164,14 @@ fun MovieList(movies: List<Movie>, onItemClicked: (Movie) -> Unit) {
     }
 }
 
+
+@Composable
+fun NoMovies() {
+    Text("No Items to show at the moment",
+        modifier = Modifier.padding(vertical=10.dp),
+        color = Typography.body1.color.copy(alpha= 0.5f)
+    )
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
