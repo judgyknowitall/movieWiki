@@ -7,7 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.moviewiki.view.MovieListPreview
 
-
+/**
+ * Entry Point of Application
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,11 +17,4 @@ class MainActivity : ComponentActivity() {
             MovieWikiApp()
         }
     }
-}
-
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    MovieListPreview()
 }

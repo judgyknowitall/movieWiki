@@ -35,7 +35,11 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
+/**
+ * Main Screen:
+ * contains MovieList and SearchBar
+ * Uses the viewModel to keep state
+ */
 @Composable
 fun MainScreen(
     viewModel: MainViewModel,
@@ -50,8 +54,7 @@ fun MainScreen(
     val noInternetSnackBar = {
         Log.d("MainScreen", "No Internet snackbar!")
         scope.launch(Dispatchers.IO + coroutineExceptionHandler) {
-            scaffoldState.snackbarHostState
-                .showSnackbar(message="No Internet...")
+            scaffoldState.snackbarHostState.showSnackbar(message="No Internet...")
         }
     }
 
@@ -61,7 +64,7 @@ fun MainScreen(
             TopAppBar {
                 Text("Movie Wiki", modifier = Modifier.padding(horizontal = 10.dp))
                 Spacer(modifier = Modifier.weight(1.0f))
-                IconButton(onClick = { viewModel.updateRealmDB() }) {
+                IconButton(onClick = { viewModel.updateRealmDB() }, modifier = Modifier.semantics { testTag = "SaveButton" }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_baseline_save_24),
                         contentDescription = "Save",
@@ -69,12 +72,6 @@ fun MainScreen(
                     )
                 }
             }
-        },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                text = { Text("Show snackbar") },
-                onClick = {noInternetSnackBar()}
-            )
         }
     )
     {
@@ -158,7 +155,7 @@ fun MovieList(movies: List<Movie>, onItemClicked: (Movie) -> Unit) {
         items(movies) { movie ->
             Button(
                 onClick = { onItemClicked(movie) },
-                modifier = Modifier
+                modifier = Modifier.semantics { testTag = "MovieItemButton" }
                     //.border(0.dp, MaterialTheme.colors.primary, RectangleShape)
                 //TODO remove outline??
             ){

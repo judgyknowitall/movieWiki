@@ -6,13 +6,12 @@ import android.os.Parcelable
 import androidx.navigation.NavType
 import com.example.moviewiki.R
 import com.google.gson.Gson
-import io.realm.RealmModel
-import io.realm.RealmObject
-import io.realm.annotations.PrimaryKey
-import io.realm.annotations.RealmClass
 import kotlinx.parcelize.Parcelize
-import org.bson.types.ObjectId
 
+/**
+ * Movie Object
+ * Parcelized so it can be passed as an argument during navigation
+ */
 @Parcelize
 class Movie (
     val title: String = "Title",
@@ -38,6 +37,10 @@ class MovieType : NavType<Movie>(isNullableAllowed = false) {
     }
 
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Sample Data (used in Previews and Tests)
+///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 object SampleMovie {

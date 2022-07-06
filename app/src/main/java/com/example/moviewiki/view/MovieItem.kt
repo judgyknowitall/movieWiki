@@ -22,16 +22,19 @@ import com.example.moviewiki.model.Movie
 import com.example.moviewiki.model.SampleMovie
 import com.example.moviewiki.ui.theme.MovieWikiTheme
 
-
+/**
+ * A single Movie Item (non-clickable)
+ * Only displays the image and title of given movie
+ */
 @Composable
 fun MovieItem(movie: Movie){
-    // Row, Column, Box(stack)
     Surface(shape = MaterialTheme.shapes.medium, elevation = 2.dp) {
         Row (modifier = Modifier
             .padding(all = 10.dp).fillMaxWidth()
             .semantics { testTag = "MovieItem" },
             verticalAlignment = Alignment.CenterVertically)
         {
+            // Movie Image
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(movie.imageURL)
@@ -48,6 +51,7 @@ fun MovieItem(movie: Movie){
             // Add a horizontal space between the image and the column
             Spacer(modifier = Modifier.width(10.dp))
 
+            // Movie Title
             Text(
                 text = movie.title,
                 style = MaterialTheme.typography.subtitle2

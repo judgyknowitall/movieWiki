@@ -14,6 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -22,13 +24,21 @@ import com.example.moviewiki.model.Movie
 import com.example.moviewiki.model.SampleMovie
 import com.example.moviewiki.ui.theme.MovieWikiTheme
 
+/**
+ * Movie Description Screen:
+ * Displays movie information (image, title, crew&cast, description)
+ * TopBar button allows user to navigate to previous screen (MainScreen)
+ */
 @Composable
 fun MovieDescriptionScreen(movie: Movie, onCloseClicked: () -> Unit){
 
     Scaffold (
         topBar = {
             TopAppBar {
-                IconButton(onClick = onCloseClicked) {
+                IconButton(
+                    onClick = onCloseClicked,
+                    modifier = Modifier.semantics { testTag = "CloseDescriptionButton" })
+                {
                     Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
                 }
                 Text(movie.title, modifier = Modifier.padding(start=10.dp))
@@ -50,7 +60,7 @@ fun MovieDescriptionScreen(movie: Movie, onCloseClicked: () -> Unit){
                         .build(),
                     placeholder = painterResource(id = movie.imageId),
                     error = painterResource(id = movie.imageId),
-                    contentDescription = "Movie Preview Image",
+                    contentDescription = movie.imageURL,
                     modifier = Modifier
                     //.align(Alignment.CenterHorizontally)
                     //.border(1.5.dp, MaterialTheme.colors.primary, RectangleShape)
@@ -78,7 +88,7 @@ fun MovieDescriptionScreen(movie: Movie, onCloseClicked: () -> Unit){
             Spacer(modifier = Modifier.height(20.dp))
 
             // Description
-            Text(movie.description)
+            Text(movie.description, modifier = Modifier.semantics { testTag = "MovieDescription" })
         }
     }
 

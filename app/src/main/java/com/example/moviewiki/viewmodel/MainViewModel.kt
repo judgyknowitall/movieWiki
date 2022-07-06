@@ -3,7 +3,6 @@ package com.example.moviewiki.viewmodel
 import android.app.Application
 import android.net.ConnectivityManager
 import android.net.Network
-import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
@@ -11,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import be.ceau.itunessearch.Search
 import be.ceau.itunessearch.enums.Media
 import com.example.moviewiki.model.*
-import com.example.moviewiki.realm.RealmMovie
+import com.example.moviewiki.model.RealmMovie
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
@@ -22,16 +21,29 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+/**
+ * Main View Model:
+ *
+ * Handles App State by using a reducer
+ * The Reducer replaces the old state with a new one every time it receives an event
+ *
+ * Realm is also initialized here and retrieves all items at start-up
+ * It deletes old items and adds the new ones upon an event call
+ *
+ * Internet Connection is also Monitored here
+ * The state gets updated every time connection is lost or available again
+ */
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     // Variables
     private val backgroundThreadRealm: Realm
-    //private val realmModule : RealmModule
     private val reducer = MainReducer(MainScreenState.init())
     val state : StateFlow<MainScreenState>
         get() = reducer.state
 
-    //private val realmMovieResults : RealmResults<RealmMovie>
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // Constructor & Destructor
 
     // Initializer
     init {
@@ -53,37 +65,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             .build()
         backgroundThreadRealm = Realm.getInstance(config)
         initRealmDB()
-
-        //realmModule = RealmModule(application)
-        /*
-        realmMovieResults = realmModule.getSyncedRealm().where(RealmMovie::class.java).findAllAsync().apply {
-            addChangeListener {
-                OrderedRealmCollectionChangeListener<RealmResults<RealmMovie>> { updatedResults, _ ->
-                    val movies = ArrayList<Movie>(updatedResults.size)
-                    updatedResults.freeze().forEach { rMovie -> movies.add(RealmMovie.convertRealmMovie(rMovie)) }
-                    showMovies(movies)
-                }
-            }
-        }
-        */
     }
 
     // Destructor
     override fun onCleared() {
-
         super.onCleared()
-        // Unregister Network Callback
-        /*
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        val connectivityManager =
-            getApplication<Application>().getSystemService(ConnectivityManager::class.java) as ConnectivityManager
-            connectivityManager.unregisterNetworkCallback(callback)
-        }
-        */
-
-        // TODO clean
-
-
+        // Save Realm results here?
         backgroundThreadRealm.close()
     }
 
@@ -145,7 +132,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
                 override fun onAvailable(network : Network) {
-                    Log.e("MainVM_getConnectivity", "The default network is now: $network")
+                    Log.d("MainVM_getConnectivity", "The default network is now: $network")
                     changeConnectivityStatus(true)
                 }
 
@@ -155,6 +142,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 }
             })
         }
+        /* Older versions?
         else {
             val connected = connectivityManager.allNetworks.any { network ->
                 connectivityManager.getNetworkCapabilities(network)
@@ -163,6 +151,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
             changeConnectivityStatus(connected)
         }
+         */
     }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -183,9 +172,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (text.isEmpty()) return
 
         viewModelScope.launch(Dispatchers.Default) {
-
-            //TODO show loading?
-
             val response = Search(text)
                 .setMedia(Media.MOVIE)
                 .setLimit(20)

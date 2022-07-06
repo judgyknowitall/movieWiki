@@ -4,6 +4,7 @@ import androidx.compose.ui.test.*
 import androidx.compose.ui.test.junit4.createComposeRule
 import com.example.moviewiki.model.SampleData
 import com.example.moviewiki.model.SampleMovie
+import com.example.moviewiki.view.MovieDescriptionScreen
 import com.example.moviewiki.view.MovieItem
 import com.example.moviewiki.view.MovieList
 import org.junit.Rule
@@ -11,7 +12,9 @@ import org.junit.Test
 
 /**
  * Test Basic MainScreen Interface
- * Test MovieList
+ * Test MovieList items
+ * Test MovieItem order
+ * Test MovieDescription Screen items
  */
 class InterfaceTest {
 
@@ -55,4 +58,28 @@ class InterfaceTest {
             .assertTextEquals(SampleMovie.movie.title)
     }
 
+    @Test
+    fun movieDescriptionTest() {
+        composeTestRule.setContent {
+            MovieDescriptionScreen(movie = SampleMovie.movie) {}
+        }
+
+        // Check for all items
+        composeTestRule
+            .onNodeWithContentDescription(SampleMovie.movie.imageURL)
+            .assertExists()
+
+        composeTestRule
+            .onAllNodesWithText(SampleMovie.movie.title)
+            .onFirst()
+            .assertExists()
+
+        composeTestRule
+            .onNodeWithText(SampleMovie.movie.crew)
+            .assertExists()
+
+        composeTestRule
+            .onNodeWithText(SampleMovie.movie.description)
+            .assertExists()
+    }
 }

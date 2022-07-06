@@ -1,13 +1,15 @@
-package com.example.moviewiki.realm
+package com.example.moviewiki.model
 
-import com.example.moviewiki.model.Movie
 import io.realm.RealmModel
 import io.realm.annotations.PrimaryKey
 import io.realm.annotations.RealmClass
 import io.realm.annotations.Required
 import org.bson.types.ObjectId
 
-
+/**
+ * Wrapper for the Movie Class
+ * Used to save movies to the local Realm Database
+ */
 @RealmClass
 open class RealmMovie (
     @PrimaryKey

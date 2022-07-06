@@ -1,15 +1,9 @@
 package com.example.moviewiki
 
-import android.app.Application
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.util.Log
 import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -20,14 +14,17 @@ import com.example.moviewiki.model.Movie
 import com.example.moviewiki.model.MovieType
 import com.example.moviewiki.model.NavRoute
 import com.example.moviewiki.model.SampleMovie
-import com.example.moviewiki.realm.RealmModule
 import com.example.moviewiki.view.MainScreen
 import com.example.moviewiki.view.MovieDescriptionScreen
 import com.example.moviewiki.ui.theme.MovieWikiTheme
 import com.example.moviewiki.viewmodel.MainViewModel
 import com.google.gson.Gson
-import kotlinx.coroutines.launch
 
+
+/**
+ * Main Composable of the App
+ * Handles Navigation
+ */
 @Composable
 fun MovieWikiApp() {
 
