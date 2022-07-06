@@ -12,6 +12,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -26,8 +28,10 @@ fun MovieItem(movie: Movie){
     // Row, Column, Box(stack)
     Surface(shape = MaterialTheme.shapes.medium, elevation = 2.dp) {
         Row (modifier = Modifier
-            .padding(all = 10.dp)
-            .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            .padding(all = 10.dp).fillMaxWidth()
+            .semantics { testTag = "MovieItem" },
+            verticalAlignment = Alignment.CenterVertically)
+        {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(movie.imageURL)

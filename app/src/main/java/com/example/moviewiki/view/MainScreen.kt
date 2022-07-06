@@ -154,7 +154,7 @@ fun SearchBar (
 
 @Composable
 fun MovieList(movies: List<Movie>, onItemClicked: (Movie) -> Unit) {
-    LazyColumn {
+    LazyColumn (modifier = Modifier.semantics { testTag = "MovieList" }) {
         items(movies) { movie ->
             Button(
                 onClick = { onItemClicked(movie) },
