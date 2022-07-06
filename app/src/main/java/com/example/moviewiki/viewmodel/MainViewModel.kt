@@ -1,20 +1,22 @@
 package com.example.moviewiki.viewmodel
 
 import android.app.Application
-import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
-import androidx.compose.runtime.collectAsState
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.ceau.itunessearch.Search
 import be.ceau.itunessearch.enums.Media
 import com.example.moviewiki.model.*
+import com.example.moviewiki.realm.RealmMovie
+import io.realm.Realm
+import io.realm.RealmConfiguration
+import io.realm.RealmResults
+import io.realm.kotlin.deleteFromRealm
+import io.realm.kotlin.where
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,9 +25,13 @@ import kotlinx.coroutines.launch
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     // Variables
+    private val backgroundThreadRealm: Realm
+    //private val realmModule : RealmModule
     private val reducer = MainReducer(MainScreenState.init())
     val state : StateFlow<MainScreenState>
         get() = reducer.state
+
+    //private val realmMovieResults : RealmResults<RealmMovie>
 
     // Initializer
     init {
@@ -36,13 +42,101 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         else {
             Log.d("MainVM_init", "Cannot add a listener to internet connectivity because of old version")
         }
+
+        Realm.init(application.applicationContext)
+        val config = RealmConfiguration.Builder()
+            .name("MovieWikiRealm")
+            .allowQueriesOnUiThread(true)
+            .allowWritesOnUiThread(true)
+            .deleteRealmIfMigrationNeeded()
+            //.migration(Migration())
+            .build()
+        backgroundThreadRealm = Realm.getInstance(config)
+        initRealmDB()
+
+        //realmModule = RealmModule(application)
+        /*
+        realmMovieResults = realmModule.getSyncedRealm().where(RealmMovie::class.java).findAllAsync().apply {
+            addChangeListener {
+                OrderedRealmCollectionChangeListener<RealmResults<RealmMovie>> { updatedResults, _ ->
+                    val movies = ArrayList<Movie>(updatedResults.size)
+                    updatedResults.freeze().forEach { rMovie -> movies.add(RealmMovie.convertRealmMovie(rMovie)) }
+                    showMovies(movies)
+                }
+            }
+        }
+        */
+    }
+
+    // Destructor
+    override fun onCleared() {
+
+        super.onCleared()
+        // Unregister Network Callback
+        /*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val connectivityManager =
+            getApplication<Application>().getSystemService(ConnectivityManager::class.java) as ConnectivityManager
+            connectivityManager.unregisterNetworkCallback(callback)
+        }
+        */
+
+        // TODO clean
+
+
+        backgroundThreadRealm.close()
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////
+    // Realm Functions
+
+    private fun initRealmDB() {
+
+        // all tasks in the realm
+        val realmMovieResults : RealmResults<RealmMovie>? = backgroundThreadRealm.where<RealmMovie>().findAll()
+
+        // Get old movies
+        backgroundThreadRealm.executeTransaction {
+            Log.e("REALM", "Retrieving saved movies")
+            if (realmMovieResults != null) {
+                val movies = ArrayList<Movie>(realmMovieResults.size)
+                for (result in realmMovieResults) {
+                    movies.add(RealmMovie.convertRealmMovie(result))
+                    //result.deleteFromRealm() // Delete old movies
+                }
+                showMovies(movies)
+                Log.e("REALM", "${movies.size} Movies!")
+            }
+            else Log.e("REALM", "No saved movies")
+        }
+    }
+
+    fun updateRealmDB() {
+        // Delete old movies
+        backgroundThreadRealm.executeTransactionAsync { transactionRealm ->
+            val results : RealmResults<RealmMovie>? = transactionRealm.where<RealmMovie>().findAll()
+            if (results != null) {
+                for (realmMovie in results) {
+                    realmMovie.deleteFromRealm()
+                }
+            }
+        }
+
+        // Add new movies
+        val realmMovies = ArrayList<RealmMovie>(state.value.movies.size)
+        state.value.movies.forEach { realmMovies.add(RealmMovie.convertMovie(it)) }
+        backgroundThreadRealm.executeTransactionAsync { transactionRealm ->
+            Log.d("MainVM_updateRealm", "Adding current search results to Realm")
+            transactionRealm.insert(realmMovies)
+        }
     }
 
 
     ///////////////////////////////////////////////////////////////////////////////////////////////
     // Internet Functions
 
-    private fun changeConnectivityStatus(connected: Boolean){
+    fun changeConnectivityStatus(connected: Boolean){
         reducer.sendEvent(MainScreenUiEvent.InternetConnected(connected))
     }
 
@@ -81,6 +175,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private fun showMovies(movies: List<Movie>){
         reducer.sendEvent(MainScreenUiEvent.ShowMovieList(movies))
+        //updateRealmDB()
     }
 
     // Coroutine
@@ -102,7 +197,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     movies.add(Movie(
                         title = result.trackName,
                         description = result.longDescription,
-                        crew = listOf(result.artistName),
+                        crew = result.artistName,
                         imageURL = result.largestArtworkUrl
                     ))
                 }

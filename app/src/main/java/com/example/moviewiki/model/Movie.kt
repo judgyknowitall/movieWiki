@@ -6,15 +6,20 @@ import android.os.Parcelable
 import androidx.navigation.NavType
 import com.example.moviewiki.R
 import com.google.gson.Gson
+import io.realm.RealmModel
+import io.realm.RealmObject
+import io.realm.annotations.PrimaryKey
+import io.realm.annotations.RealmClass
 import kotlinx.parcelize.Parcelize
+import org.bson.types.ObjectId
 
 @Parcelize
-data class Movie (
+class Movie (
     val title: String = "Title",
     val imageId: Int = R.drawable.movie_icon,
     val imageURL: String = "",
-    val crew: List<String> = emptyList(),
-    val description: String = "Description"
+    val crew: String = "",
+    val description: String = "Description",
 ) : Parcelable
 
 
@@ -39,7 +44,7 @@ object SampleMovie {
     val movie = Movie (
         title= "Spiderman",
         imageURL = "https://m.media-amazon.com/images/M/MV5BZWMyYzFjYTYtNTRjYi00OGExLWE2YzgtOGRmYjAxZTU3NzBiXkEyXkFqcGdeQXVyMzQ0MzA0NTM@._V1_.jpg",
-        crew = listOf("Marry", "Jane", "Joe"),
+        crew = "Marry, Jane, Joe",
         description = "This is such a great movie. We've got Spiderman1, 2, and 3. And then there's the Amazing Spiderman, etc. "
     )
 }
@@ -47,8 +52,8 @@ object SampleMovie {
 
 object SampleData {
     val moviesSample = listOf(
-        Movie("Spiderman"),
-        Movie("Antman"),
-        Movie("Superman")
+        Movie(title="Spiderman"),
+        Movie(title="Antman"),
+        Movie(title="Superman")
     )
 }

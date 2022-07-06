@@ -85,7 +85,7 @@ fun MovieDescriptionScreen(movie: Movie, onCloseClicked: () -> Unit){
 }
 
 @Composable
-fun DescriptionEntry(title: String, description: List<String>) {
+fun DescriptionEntry(title: String, description: String) {
     Row (modifier = Modifier.padding(vertical = 2.dp), verticalAlignment = Alignment.CenterVertically) {
         Text(
             title.plus(":"),
@@ -95,9 +95,7 @@ fun DescriptionEntry(title: String, description: List<String>) {
         Spacer(modifier = Modifier.width(20.dp))
 
         if (description.isNotEmpty()) {
-            Text(
-                description.joinToString(separator = ", ") { it }
-            )
+            Text(description)
         }
     }
 }

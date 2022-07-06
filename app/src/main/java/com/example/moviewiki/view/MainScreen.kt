@@ -3,6 +3,7 @@ package com.example.moviewiki.view
 import android.content.res.Configuration
 import android.util.Log
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,10 +16,14 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.moviewiki.R
 import com.example.moviewiki.model.Movie
 import com.example.moviewiki.model.SampleData
 import com.example.moviewiki.model.SampleMovie.movie
@@ -52,7 +57,15 @@ fun MainScreen(
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar {
-                Text("Search for a Movie")
+                Text("Movie Wiki", modifier = Modifier.padding(horizontal = 10.dp))
+                Spacer(modifier = Modifier.weight(1.0f))
+                IconButton(onClick = { viewModel.updateRealmDB() }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_baseline_save_24),
+                        contentDescription = "Save",
+                        tint = Color.White
+                    )
+                }
             }
         },
         floatingActionButton = {
@@ -115,7 +128,9 @@ fun SearchBar (
     onDoneTyping: () -> Unit = {}
 ) {
     OutlinedTextField (
-        modifier = Modifier.fillMaxWidth().padding(all = 10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = 10.dp),
         singleLine = true,
         placeholder = { Text(text = "Search Movies by Name") },
         value = text,
@@ -174,7 +189,7 @@ fun MovieListPreview() {
 
 @Preview
 @Composable
-fun TopBarPreview() {
+fun SearchBarPreview() {
     var value by remember { mutableStateOf("")}
     SearchBar(
         value,
@@ -183,4 +198,12 @@ fun TopBarPreview() {
             value = ""
         }
     )
+}
+
+//TODO mainscreen preview
+@Preview
+@Composable
+fun MainScreenPreview() {
+    val vm = viewModel<MainViewModel>()
+    MainScreen( viewModel = vm, onItemClicked = {})
 }
