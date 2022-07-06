@@ -52,8 +52,17 @@ object SampleMovie {
 
 object SampleData {
     val moviesSample = listOf(
-        Movie(title="Spiderman"),
-        Movie(title="Antman"),
-        Movie(title="Superman")
+        Movie(
+            title="Spiderman",
+            imageURL = "https://static.wikia.nocookie.net/marvelcinematicuniverse/images/b/b6/Amazing_Spider-Man_-_Profile_Pic.png/revision/latest?cb=20211221112531"
+        ),
+        Movie(
+            title="Antman",
+            imageURL = "https://m.media-amazon.com/images/M/MV5BMjM2NTQ5Mzc2M15BMl5BanBnXkFtZTgwNTcxMDI2NTE@._V1_FMjpg_UX1000_.jpg"
+        ),
+        Movie(
+            title="Superman",
+            imageURL = "https://m.media-amazon.com/images/M/MV5BMTY5ODI4NzMtM2EzYS00ZGFlLThjMjgtODMyN2QwYjBkYTYwXkEyXkFqcGdeQXVyMTEyNzgwMDUw._V1_FMjpg_UX1000_.jpg"
+        )
     )
 }

@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -130,7 +132,8 @@ fun SearchBar (
     OutlinedTextField (
         modifier = Modifier
             .fillMaxWidth()
-            .padding(all = 10.dp),
+            .padding(all = 10.dp)
+            .semantics { testTag = "SearchBar" },
         singleLine = true,
         placeholder = { Text(text = "Search Movies by Name") },
         value = text,

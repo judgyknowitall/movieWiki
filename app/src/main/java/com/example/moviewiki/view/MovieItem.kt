@@ -35,7 +35,7 @@ fun MovieItem(movie: Movie){
                     .build(),
                 placeholder = painterResource(id = movie.imageId),
                 error = painterResource(id = movie.imageId),
-                contentDescription = "Movie Preview Image",
+                contentDescription = movie.imageURL,
                 modifier = Modifier
                     .size(50.dp)//.clip(CircleShape)
                     .border(1.5.dp, MaterialTheme.colors.primary, RectangleShape)
