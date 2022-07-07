@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import be.ceau.itunessearch.Response
 import be.ceau.itunessearch.Search
 import be.ceau.itunessearch.enums.Media
 import com.example.moviewiki.model.*
@@ -20,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.io.FileNotFoundException
 
 /**
  * Main View Model:
@@ -171,29 +173,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private fun search(text: String) {
         if (text.isEmpty()) return
 
-        viewModelScope.launch(Dispatchers.Default) {
-            val response = Search(text)
-                .setMedia(Media.MOVIE)
-                .setLimit(20)
-                .execute()
+        viewModelScope.launch(Dispatchers.IO) {
 
-            if (response.results != null){
-                val movies: MutableList<Movie> = mutableListOf()
-                for (result in response.results) {
-                    movies.add(Movie(
-                        title = result.trackName,
-                        description = result.longDescription,
-                        crew = result.artistName,
-                        imageURL = result.largestArtworkUrl
-                    ))
+            try {
+                val response = Search(text)
+                    .setMedia(Media.MOVIE)
+                    .setLimit(20)
+                    .execute()
+
+                if (response != null && response.results != null){
+                    val movies: MutableList<Movie> = mutableListOf()
+                    for (result in response.results) {
+                        movies.add(Movie(
+                            title = result.trackName,
+                            description = result.longDescription,
+                            crew = result.artistName,
+                            imageURL = result.largestArtworkUrl
+                        ))
+                    }
+
+                    if (response.resultCount == 0){
+                        Log.d("MainViewModel.search", "Results are empty!")
+                    }
+                    else {
+                        showMovies(movies)
+                    }
                 }
 
-                if (response.resultCount == 0){
-                    Log.d("MainViewModel.search", "Results are empty!")
-                }
-                else {
-                    showMovies(movies)
-                }
+            } catch(e : Exception) {
+                Log.e("MainVM_SEARCH", e.message.toString())
             }
         }
     }
